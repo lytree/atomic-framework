@@ -15,7 +15,7 @@ public class BeanFactoryTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         BeanDefinition beanDefinition = new BeanDefinition(HelloService.class);
         beanFactory.registerBeanDefinition("helloService", beanDefinition);
-        HelloService helloService = (HelloService) beanFactory.getBean("helloService", "测试");
+        HelloService helloService = (HelloService) beanFactory.getBean("helloService");
         MatcherAssert.assertThat(helloService, IsNull.notNullValue());
         MatcherAssert.assertThat(helloService.sayHello(), IsEqual.equalTo("hello"));
         System.out.println(helloService);
