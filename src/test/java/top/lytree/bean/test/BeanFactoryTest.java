@@ -1,10 +1,11 @@
-package top.lytree.bean.factory;
+package top.lytree.bean.test;
 
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNull;
 import org.junit.Test;
+import top.lytree.bean.factory.HelloService;
 import top.lytree.bean.factory.config.BeanDefinition;
 import top.lytree.bean.factory.support.DefaultListableBeanFactory;
 

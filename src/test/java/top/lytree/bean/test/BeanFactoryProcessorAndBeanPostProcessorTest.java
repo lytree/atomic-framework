@@ -1,4 +1,4 @@
-package top.lytree.bean.factory;
+package top.lytree.bean.test;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsEqual;

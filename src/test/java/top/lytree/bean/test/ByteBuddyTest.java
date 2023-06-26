@@ -1,11 +1,11 @@
-package top.lytree.bean.factory;
+package top.lytree.bean.test;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.junit.Test;
+import top.lytree.bean.factory.HelloService;
+import top.lytree.bean.factory.HelloServiceInterceptor;
 
 import java.io.File;
 import java.io.IOException;
