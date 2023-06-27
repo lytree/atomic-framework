@@ -1,16 +1,22 @@
 package top.lytree.bean.factory.support;
 
 import net.bytebuddy.ByteBuddy;
+import org.apache.commons.lang3.ClassUtils;
 import top.lytree.bean.BeanUtils;
 import top.lytree.bean.BeansException;
 import top.lytree.bean.PropertyValue;
 import top.lytree.bean.PropertyValues;
+import top.lytree.bean.factory.DisposableBean;
+import top.lytree.bean.factory.InitializingBean;
 import top.lytree.bean.factory.config.AutowireCapableBeanFactory;
 import top.lytree.bean.factory.config.BeanDefinition;
 import top.lytree.bean.factory.config.BeanPostProcessor;
 import top.lytree.bean.factory.config.BeanReference;
+import top.lytree.lang.StringUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * 实例化Bean类
@@ -27,10 +33,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             // 给 Bean 填充属性
             applyPropertyValues(beanName, bean, beanDefinition);
 
-            initializeBean(beanName,bean,beanDefinition);
+            initializeBean(beanName, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
+        //注册有销毁方法的bean
+        registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
 
         addSingleton(beanName, bean);
         return bean;
@@ -47,6 +55,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             }
         }
         return getInstantiationStrategy().instantiate(beanDefinition, beanName, constructorToUse, args);
+    }
+
+    protected void registerDisposableBeanIfNecessary(String beanName, Object bean, BeanDefinition beanDefinition) {
+        if (bean instanceof DisposableBean || !StringUtils.isEmpty(beanDefinition.getDestroyMethodName())) {
+            registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
+        }
     }
 
     /**
@@ -72,13 +86,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Error setting property values：" + beanName);
         }
     }
+
     protected Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
         //执行BeanPostProcessor的前置处理
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
-        //TODO 后面会在此处执行bean的初始化方法
-        invokeInitMethods(beanName, wrappedBean, beanDefinition);
-
+        try {
+            invokeInitMethods(beanName, wrappedBean, beanDefinition);
+        } catch (Throwable ex) {
+            throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", ex);
+        }
         //执行BeanPostProcessor的后置处理
         wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
         return wrappedBean;
@@ -121,10 +138,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param beanDefinition
      * @throws Throwable
      */
-    protected void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) {
-        //TODO 后面会实现
-        System.out.println("执行bean[" + beanName + "]的初始化方法");
+    protected void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) throws Exception {
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean) bean).afterPropertiesSet();
+        }
+        String initMethodName = beanDefinition.getInitMethodName();
+        if (StringUtils.isNotEmpty(initMethodName)) {
+            Method initMethod = ClassUtils.getPublicMethod(beanDefinition.getBeanClass(), initMethodName);
+            if (initMethod == null) {
+                throw new BeansException("Could not find an init method named '" + initMethodName + "' on bean with name '" + beanName + "'");
+            }
+            initMethod.invoke(bean);
+        }
     }
+
     public InstantiationStrategy getInstantiationStrategy() {
         return instantiationStrategy;
     }

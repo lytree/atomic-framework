@@ -11,10 +11,10 @@ public  interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Singl
      */
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
-//    /**
-//     * 销毁单例bean
-//     */
-//    void destroySingletons();
+    /**
+     * 销毁单例bean
+     */
+    void destroySingletons();
 //
 //    void addEmbeddedValueResolver(StringValueResolver valueResolver);
 //

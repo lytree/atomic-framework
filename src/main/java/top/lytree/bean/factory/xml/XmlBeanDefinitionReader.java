@@ -98,12 +98,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             }
 
             BeanDefinition beanDefinition = new BeanDefinition(clazz);
-//            beanDefinition.setInitMethodName(initMethodName);
-//            beanDefinition.setDestroyMethodName(destroyMethodName);
-//            beanDefinition.setLazyInit(Boolean.parseBoolean(lazyInit));
-//            if (StringUtils.isNotEmpty(beanScope)) {
-//                beanDefinition.setScope(beanScope);
-//            }
+            beanDefinition.setInitMethodName(initMethodName);
+            beanDefinition.setDestroyMethodName(destroyMethodName);
+            beanDefinition.setLazyInit(Boolean.parseBoolean(lazyInit));
+            if (StringUtils.isNotEmpty(beanScope)) {
+                beanDefinition.setScope(beanScope);
+            }
 
             List<Element> propertyList = bean.elements(PROPERTY_ELEMENT);
             for (Element property : propertyList) {
