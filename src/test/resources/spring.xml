@@ -15,4 +15,5 @@
     <bean id="car" class="top.lytree.bean.core.Car">
         <property name="brand" value="porsche"/>
     </bean>
+    <bean id="awareService" class="top.lytree.bean.factory.AwareService"/>
 </beans>

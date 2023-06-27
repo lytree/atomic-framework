@@ -6,6 +6,7 @@ import top.lytree.bean.BeanUtils;
 import top.lytree.bean.BeansException;
 import top.lytree.bean.PropertyValue;
 import top.lytree.bean.PropertyValues;
+import top.lytree.bean.factory.BeanFactoryAware;
 import top.lytree.bean.factory.DisposableBean;
 import top.lytree.bean.factory.InitializingBean;
 import top.lytree.bean.factory.config.AutowireCapableBeanFactory;
@@ -88,6 +89,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     protected Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) bean).setBeanFactory(this);
+        }
+
         //执行BeanPostProcessor的前置处理
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
