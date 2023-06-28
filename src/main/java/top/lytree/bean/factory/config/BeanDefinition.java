@@ -11,11 +11,15 @@ public class BeanDefinition {
     public static String SCOPE_PROTOTYPE = "prototype";
 
     private Class beanClass;
+
     private PropertyValues propertyValues;
+
     private String initMethodName;
 
     private String destroyMethodName;
-
+    /**
+     * 作用域
+     */
     private String scope = SCOPE_SINGLETON;
 
     private boolean singleton = true;
@@ -80,6 +84,18 @@ public class BeanDefinition {
         this.destroyMethodName = destroyMethodName;
     }
 
+
+
+    public void setLazyInit(boolean b) {
+        lazyInit = b;
+    }
+
+    public boolean isLazyInit() {
+        return lazyInit;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,13 +107,5 @@ public class BeanDefinition {
     @Override
     public int hashCode() {
         return Objects.hash(beanClass);
-    }
-
-    public void setLazyInit(boolean b){
-        lazyInit=b;
-    }
-
-    public boolean isLazyInit(){
-        return lazyInit;
     }
 }
