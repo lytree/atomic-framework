@@ -46,6 +46,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         registerListeners();
         //提前实例化单例bean
         beanFactory.preInstantiateSingletons();
+        //发布容器刷新完毕事件
+        finishRefresh();
     }
     /**
      * 初始化事件发布者

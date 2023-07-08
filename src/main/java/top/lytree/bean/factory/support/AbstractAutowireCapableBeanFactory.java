@@ -2,10 +2,7 @@ package top.lytree.bean.factory.support;
 
 import net.bytebuddy.ByteBuddy;
 import org.apache.commons.lang3.ClassUtils;
-import top.lytree.bean.BeanUtils;
-import top.lytree.bean.BeansException;
-import top.lytree.bean.PropertyValue;
-import top.lytree.bean.PropertyValues;
+import top.lytree.bean.*;
 import top.lytree.bean.factory.BeanFactoryAware;
 import top.lytree.bean.factory.DisposableBean;
 import top.lytree.bean.factory.InitializingBean;
@@ -86,7 +83,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                     value = getBean(beanReference.getBeanName());
                 }
                 // 属性填充
-                BeanUtils.setFieldValue(bean, name, value);
+                ReflectUtils.setFieldValue(bean, name, value);
             }
         } catch (Exception e) {
             throw new BeansException("Error setting property values：" + beanName);
